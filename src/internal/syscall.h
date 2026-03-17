@@ -45,10 +45,9 @@
 #define SYS_rt_sigaction 0
 #define SYS_rt_sigprocmask 0
 
-static inline long __syscall(long n, ...) { return -ENOSYS; }
-
-#define syscall(...) (-ENOSYS)
+/* Variadic __syscall — all syscalls return -ENOSYS in WASM */
 #define __syscall(...) (-ENOSYS)
+#define syscall(...) (-ENOSYS)
 
 #define SYSCALL_MMAP2_UNIT 4096ULL
 #define SYSCALL_RLIM_INFINITY (~0ULL)
@@ -56,9 +55,10 @@ static inline long __syscall(long n, ...) { return -ENOSYS; }
 /* Stub for code that references __clock_gettime */
 #define __clock_gettime(clk, ts) (-ENOSYS)
 
-/* Futex stubs for lock code */
-#define __futexwait(addr, val, priv) ((void)0)
-#define __wake(addr, cnt, priv) ((void)0)
+/* Note: __futexwait and __wake are defined as inline functions in
+ * pthread_impl.h using __syscall(SYS_futex, ...) which resolves
+ * to -ENOSYS via the __syscall macro above. Do NOT redefine them
+ * as macros here — it breaks the function declarations. */
 
 typedef long syscall_arg_t;
 
