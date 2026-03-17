@@ -2,7 +2,9 @@
 #include <stdint.h>
 #include <string.h>
 #include <errno.h>
-#include "dynlink.h"
+
+/* In WASM, malloc is always replaced (by the contract runtime) */
+static int __malloc_replaced = 1;
 
 static size_t mal0_clear(char *p, size_t n)
 {
