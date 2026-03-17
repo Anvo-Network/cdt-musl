@@ -5,6 +5,7 @@
 #include <limits.h>
 #include <errno.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 #include "shgetc.h"
 #include "floatscan.h"
@@ -60,9 +61,8 @@ static long long scanexp(FILE *f, int pok)
 }
 
 
-static long double decfloat(FILE *f, int c, int bits, int emin, int sign, int pok)
+static long double decfloat(uint32_t *x, FILE *f, int c, int bits, int emin, int sign, int pok)
 {
-	uint32_t x[KMAX];
 	static const uint32_t th[] = { LD_B1B_MAX };
 	int i, j, k, a, z;
 	long long lrp=0, dc=0;
@@ -503,5 +503,10 @@ long double __floatscan(FILE *f, int prec, int pok)
 		c = '0';
 	}
 
-	return decfloat(f, c, bits, emin, sign, pok);
+	/* Heap-allocate x[] to avoid WASM stack overflow (KMAX can be 2048) */
+	uint32_t *x = (uint32_t *)malloc(sizeof(uint32_t) * KMAX);
+	if (!x) return 0;
+	long double r = decfloat(x, f, c, bits, emin, sign, pok);
+	free(x);
+	return r;
 }

@@ -1,10 +1,12 @@
 #include <time.h>
-#include "syscall.h"
+#include <stdint.h>
+
+__attribute__((core_net_wasm_import))
+extern uint64_t current_time(void);
 
 time_t time(time_t *t)
 {
-	struct timespec ts;
-	__clock_gettime(CLOCK_REALTIME, &ts);
-	if (t) *t = ts.tv_sec;
-	return ts.tv_sec;
+	time_t elapsed = (time_t)(current_time() / 1000000LL);
+	if (t) *t = elapsed;
+	return elapsed;
 }
