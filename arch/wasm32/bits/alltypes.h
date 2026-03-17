@@ -1,3 +1,4 @@
+#pragma once
 /* wasm32 alltypes.h - pre-generated from musl 1.2.5 alltypes.h.in
  *
  * WASM target: ILP32, little-endian, 64-bit time_t
