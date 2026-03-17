@@ -1,9 +1,10 @@
 /* wasm32 alltypes.h - pre-generated from musl 1.2.5 alltypes.h.in
- * Architecture: wasm32 (ILP32, little-endian, 64-bit time_t)
  *
- * _Addr  = int       (32-bit pointers)
- * _Int64 = long long  (64-bit integers)
- * _Reg   = int       (32-bit registers)
+ * WASM target: ILP32, little-endian, 64-bit time_t
+ *   _Addr = int (32-bit pointers), _Int64 = long long, _Reg = int
+ *
+ * Native target (CORE_NET_NATIVE): LP64, for host-side unit testing
+ *   _Addr = long (64-bit pointers), _Int64 = long, _Reg = long
  */
 
 #define __LITTLE_ENDIAN 1234
@@ -11,10 +12,19 @@
 #define __USE_TIME_BITS64 1
 
 #define __BYTE_ORDER 1234
+
+#ifdef CORE_NET_NATIVE
+#define __LONG_MAX 0x7fffffffffffffffL
+#else
 #define __LONG_MAX 0x7fffffffL
+#endif
 
 #ifdef __NEED_size_t
+#ifdef CORE_NET_NATIVE
+typedef unsigned long size_t;
+#else
 typedef unsigned int size_t;
+#endif
 #endif
 #ifdef __NEED___isoc_va_list
 typedef __builtin_va_list __isoc_va_list;
@@ -24,28 +34,44 @@ typedef __builtin_va_list __isoc_va_list;
 #endif
 
 #ifdef __NEED_uintptr_t
+#ifdef CORE_NET_NATIVE
+typedef unsigned long uintptr_t;
+#else
 typedef unsigned int uintptr_t;
+#endif
 #endif
 #if defined(__NEED_uintptr_t) && !defined(__DEFINED_uintptr_t)
 #define __DEFINED_uintptr_t
 #endif
 
 #ifdef __NEED_ptrdiff_t
+#ifdef CORE_NET_NATIVE
+typedef long ptrdiff_t;
+#else
 typedef int ptrdiff_t;
+#endif
 #endif
 #if defined(__NEED_ptrdiff_t) && !defined(__DEFINED_ptrdiff_t)
 #define __DEFINED_ptrdiff_t
 #endif
 
 #ifdef __NEED_ssize_t
+#ifdef CORE_NET_NATIVE
+typedef long ssize_t;
+#else
 typedef int ssize_t;
+#endif
 #endif
 #if defined(__NEED_ssize_t) && !defined(__DEFINED_ssize_t)
 #define __DEFINED_ssize_t
 #endif
 
 #ifdef __NEED_intptr_t
+#ifdef CORE_NET_NATIVE
+typedef long intptr_t;
+#else
 typedef int intptr_t;
+#endif
 #endif
 #if defined(__NEED_intptr_t) && !defined(__DEFINED_intptr_t)
 #define __DEFINED_intptr_t
