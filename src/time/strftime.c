@@ -281,7 +281,14 @@ size_t __strftime_l(char *restrict s, size_t n, const char *restrict f, const st
 
 size_t strftime(char *restrict s, size_t n, const char *restrict f, const struct tm *restrict tm)
 {
-	return __strftime_l(s, n, f, tm, CURRENT_LOCALE);
+	locale_t loc = CURRENT_LOCALE;
+	/* In WASM/native, locale may be NULL (zero-initialized pthread struct).
+	 * Use C locale as fallback to prevent NULL dereference. */
+	if (!loc) {
+		extern const struct __locale_struct __c_locale;
+		loc = (locale_t)&__c_locale;
+	}
+	return __strftime_l(s, n, f, tm, loc);
 }
 
 weak_alias(__strftime_l, strftime_l);

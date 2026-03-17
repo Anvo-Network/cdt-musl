@@ -1,7 +1,9 @@
-#include "pthread_impl.h"
+/* WASM stub: return pointer to singleton thread struct.
+ * Zero-initialized; single-threaded environment. */
 
-/* WASM stub: return the singleton thread struct */
+static char __wasm_pthread[256]; /* oversized to cover struct pthread */
+
 void *__get_tp(void)
 {
-	return __pthread_self();
+	return __wasm_pthread;
 }
