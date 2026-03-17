@@ -1,6 +1,8 @@
 #include "stdio_impl.h"
 
+#ifndef CORE_NET_NATIVE
 __attribute__((core_net_wasm_import))
+#endif
 extern void prints_l(const char *, unsigned int);
 
 size_t __stdio_write(FILE *f, const unsigned char *buf, size_t len)
