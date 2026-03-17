@@ -5,6 +5,7 @@
 #include <signal.h>
 #include <errno.h>
 #include <limits.h>
+#include <locale.h>
 #include <sys/mman.h>
 #include "libc.h"
 #include "syscall.h"
