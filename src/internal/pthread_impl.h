@@ -11,8 +11,6 @@
 #include "atomic.h"
 #include "futex.h"
 
-#include "pthread_arch.h"
-
 #define pthread __pthread
 
 struct pthread {
@@ -66,6 +64,8 @@ struct pthread {
 	uintptr_t *dtv;
 #endif
 };
+
+#include "pthread_arch.h"
 
 enum {
 	DT_EXITED = 0,
