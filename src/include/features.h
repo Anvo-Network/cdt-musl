@@ -6,10 +6,10 @@
 #define weak __attribute__((__weak__))
 #define hidden __attribute__((__visibility__("hidden")))
 
-/* For WASM targets, use #pragma weak instead of __alias__ because clang on
-   macOS/Darwin rejects __alias__ even when cross-compiling to WASM. The
-   pragma approach produces identical weak symbols and works on all hosts. */
-#if defined(__wasm__)
+/* Clang on macOS/Darwin rejects __alias__ for both WASM and native MachO
+   targets. Use #pragma weak instead, which works on all platforms and
+   produces identical weak symbol bindings. */
+#if defined(__APPLE__) || defined(__wasm__)
 #define _WA_STR(x) #x
 #define _WA_PRAGMA(x) _Pragma(_WA_STR(x))
 #define weak_alias(old, new) \
